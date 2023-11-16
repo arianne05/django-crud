@@ -6,7 +6,7 @@ Web Dev
 
 {% block content %}
     <h1 class="text-center mb-4">Table Body</h1>
-
+    {% if user_list %}
     <div class="table-responsive">
         <table class="table table-bordered table-striped table-hover">
             <thead>
@@ -14,18 +14,23 @@ Web Dev
                     <th>Firstname</th>
                     <th>Lastname</th>
                     <th>Email</th>
-                    <th>Image</th>
+                    <th class="text-center">Image</th>
                 </tr>
             </thead>
             <tbody>
+                {% for user in user_list%}
                 <tr>
-                    <td>A</td>
-                    <td>f</td>
-                    <td>f</td>
-                    <td>f</td>
+                    <td>{{user.user_fname}}</td>
+                    <td>{{user.user_lname}}</td>
+                    <td>{{user.user_email}}</td>
+                    <td class="text-center">
+                        <img src="media/{{user.user_image}}" alt="userimage" width="50" class="rounded-circle">
+                    </td>
                 </tr>
+                {% endfor %}
             </tbody>
         </table>
     </div>
+    {% endif %}
 
 {% endblock %}
