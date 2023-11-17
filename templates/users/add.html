@@ -4,9 +4,16 @@
     Add user
 {% endblock %}
 
+<!-- Catch error using this condition -->
+{% if error_message %}
+    <p class="alert alert-danger">
+        <strong>{{error_message}}</strong> <!--the error_message came from the parameter in the views.py try function-->
+    </p>
+{% endif %}
+
 {% block content %}
 
-    <form action="" method="post" enctype="multipart/form-data">
+    <form action="{% url 'users:processadd' %}" method="post" enctype="multipart/form-data">
         {% csrf_token %} <!--require for security/make sure it request inside application only-->
 
         <div class="form-group">
