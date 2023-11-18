@@ -51,4 +51,13 @@ def detail(request, profile_id):
         user = User.objects.get(pk=profile_id)
     except User.DoesNotExist:
         raise Http404("Profile does not exist")
-    return render(request, 'users/detail.html', {'user':user}) #redirects to details.html and passing a 'user' variable/parameter
+    return render(request, 'users/detail.html', {'users':user}) #redirects to details.html and passing a 'user' variable/parameter
+
+#function for delete
+def delete(request, profile_id):
+    User.objects.filter(id=profile_id).delete() #filter first which profiled id to delete
+    return HttpResponseRedirect('/users') #retun to index.html
+
+#function for edit
+def edit(request, profile_id):
+    return 'Test'
