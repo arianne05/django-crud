@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, Http404
 #add new import for user to fetch data from User table in a database
 from .models import User
 #add new import for try and excepts function to work
@@ -45,3 +45,10 @@ def processadd(request):
         user.save() #insert data into the database
         return HttpResponseRedirect('/users') #after inserting into the database redirects into the previous page
 
+#function for getting the full details of a certain user
+def detail(request, profile_id):
+    try:
+        user = User.objects.get(pk=profile_id)
+    except User.DoesNotExist:
+        raise Http404("Profile does not exist")
+    return render(request, 'users/detail.html', {'user':user}) #redirects to details.html and passing a 'user' variable/parameter

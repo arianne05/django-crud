@@ -24,7 +24,9 @@ Web Dev
                     <td>{{user.user_lname}}</td>
                     <td>{{user.user_email}}</td>
                     <td class="text-center">
-                        <img src="media/{{user.user_image}}" alt="userimage" width="50" class="rounded-circle">
+                        <a href="{% url 'users:detail' user.id %}"> <!--added link with parameter of user.id as their unique value-->
+                            <img src="media/{{user.user_image}}" alt="userimage" width="50" class="rounded-circle">
+                        </a>
                     </td>
                 </tr>
                 {% endfor %}
