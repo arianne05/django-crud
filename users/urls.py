@@ -11,4 +11,5 @@ urlpatterns = [
     path('<int:profile_id>/detail/', views.detail, name='detail'),
     path('<int:profile_id>/delete/', views.delete, name='delete'),
     path('<int:profile_id>/edit/', views.edit, name='edit'),
+    path('<int:profile_id>/processedit/', views.processedit, name='processedit'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

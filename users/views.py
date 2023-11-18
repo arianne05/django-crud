@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404, reverse
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 #add new import for user to fetch data from User table in a database
 from .models import User
@@ -58,6 +58,34 @@ def delete(request, profile_id):
     User.objects.filter(id=profile_id).delete() #filter first which profiled id to delete
     return HttpResponseRedirect('/users') #retun to index.html
 
-#function for edit
+#function for displaying details in edit inside an input type
 def edit(request, profile_id):
-    return 'Test'
+    try:
+        user = User.objects.get(pk=profile_id)
+    except User.DoesNotExist:
+        raise Http404("Profile does not exist")
+    return render(request, 'users/edit.html', {'users':user})
+
+#function to process update in edit
+def processedit(request, profile_id):
+    user = get_object_or_404(User, pk=profile_id) # import get_object_or_404 for checking if a certain id is avail in the database
+    profile_pic = request.FILES.get('image')
+    try:
+        fname = request.POST.get('fname')
+        lname = request.POST.get('lname')
+        email = request.POST.get('email')
+        position = request.POST.get('position')
+    except (KeyError, User.DoesNotExist): #partner by the get_object_or_404
+        return render(request, 'profiles/detail.html', {
+            'user':user,
+            'error_message': "Problem updating record",})
+    else:
+        user_profile = User.objects.get(id=profile_id)
+        user_profile.user_fname = fname
+        user_profile.user_lname = lname
+        user_profile.user_email = email
+        user_profile.user_position = position
+        if profile_pic:
+            user_profile.user_image = profile_pic
+        user_profile.save()
+        return HttpResponseRedirect(reverse('users:detail', args=(profile_id,))) #must put reverse method
