@@ -5,7 +5,18 @@ Web Dev
 {% endblock %}
 
 {% block content %}
-    <h1 class="text-center mb-4">Table Body</h1>
+
+    <!-- Search -->
+    <form action="{% url 'users:search' %}" method="GET" class="mb-2">
+        <div class="input-group">
+            <input type="text" name="search" placeholder="Search here" class="form-control" required>
+            <div class="input-group-append">
+                <button class="btn btn-success">Search</button>
+            </div>
+        </div>
+    </form>
+
+    <h1 class="text-center mb-4">List of User</h1>
     {% if page_obj %}
     <div class="table-responsive">
         <table class="table table-bordered table-striped table-hover">
