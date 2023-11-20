@@ -5,8 +5,19 @@ Web Dev
 {% endblock %}
 
 {% block content %}
-    <h1 class="text-center mb-4">Table Body</h1>
-    {% if user_list %}
+
+    <!-- Search -->
+    <form action="{% url 'users:search' %}" method="GET" class="mb-2">
+        <div class="input-group">
+            <input type="text" name="search" placeholder="Search here" class="form-control" required>
+            <div class="input-group-append">
+                <button class="btn btn-success">Search</button>
+            </div>
+        </div>
+    </form>
+
+    <h1 class="text-center mb-4">List of User</h1>
+    {% if page_obj %}
     <div class="table-responsive">
         <table class="table table-bordered table-striped table-hover">
             <thead>
@@ -18,7 +29,7 @@ Web Dev
                 </tr>
             </thead>
             <tbody>
-                {% for user in user_list%}
+                {% for user in page_obj %}
                 <tr>
                     <td>{{user.user_fname}}</td>
                     <td>{{user.user_lname}}</td>
@@ -32,7 +43,23 @@ Web Dev
                 {% endfor %}
             </tbody>
         </table>
+
+        <ul class="pagination">
+            {% if page_obj.has_previous %}
+                <li class="page-item"><a class="page-link" href="?page=1">&laquo; First</a></li>
+                <li class="page-item"><a class="page-link" href="?page={{page_obj.previous_page_number}}">previous</a></li>
+            {% endif %}
+
+            {% if page_obj.has_next %}
+                <li class="page-item"><a class="page-link" href="?page={{page_obj.next_page_number}}">next</a></li>
+                <li class="page-item"><a class="page-link" href="?page={{page_obj.paginator.num_pages}}">&raquo; last</a></li>
+            {% endif %}
+        </ul>
+
     </div>
+    {% else %} <!--recently added this code in case no data is found-->>
+        <p>No record found</p>
+
     {% endif %}
 
 {% endblock %}

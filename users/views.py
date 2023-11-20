@@ -1,20 +1,37 @@
 from django.shortcuts import render, get_object_or_404, reverse
 from django.http import HttpResponse, HttpResponseRedirect, Http404
-#add new import for user to fetch data from User table in a database
-from .models import User
-#add new import for try and excepts function to work
-from django.core.exceptions import ObjectDoesNotExist
+from .models import User #add new import for user to fetch data from User table in a database
+from django.core.paginator import Paginator #import for pagination functionality
+from django.db.models import Q #import for search function
+from django.core.exceptions import ObjectDoesNotExist #add new import for try and excepts function to work
 
-# Create your views here.
+# Create your views here sample
 # def index(request):
 #     return HttpResponse('Hello')
 
 #add this code to run the html index.html templates
 def index(request):
-    user_list = User.objects.order_by('pub_date')[:] #use negative sign before the pubdate to descend order/ [:5] limit by 5
-    context = {'user_list': user_list}
-    
-    return render(request, 'users/index.html', context) #context variable is added to pass its data
+    #previous code without pagination
+    #user_list = User.objects.order_by('pub_date')[:] #use negative sign before the pubdate to descend order/ [:5] limit by 5
+    #context = {'user_list': user_list}
+    #return render(request, 'users/index.html', context) #context variable is added to pass its data
+
+    #updated code with pagination
+    user_list = User.objects.all().order_by('-id') #revised code to put pagination
+    paginator = Paginator(user_list, 5)
+    page_number = request.GET.get('page')
+    user_list = paginator.get_page(page_number)
+    return render(request, 'users/index.html', {'page_obj': user_list})
+
+#search function
+def search(request):
+    term = request.GET.get('search', '') #get search value parameter and no value as ''
+    user_list = User.objects.filter(Q(user_fname__icontains=term) | Q(user_lname__icontains=term)).order_by('-id') #use __ double underscore after the table name to be used as a wild card(values that close to the search value term)
+    # Pagination in search
+    paginator = Paginator(user_list, 5)
+    page_number = request.GET.get('page')
+    user_list = paginator.get_page(page_number)
+    return render(request, 'users/index.html', {'page_obj': user_list})
 
 #add this code to run the html add.html templates
 def add(request):
@@ -76,7 +93,7 @@ def processedit(request, profile_id):
         email = request.POST.get('email')
         position = request.POST.get('position')
     except (KeyError, User.DoesNotExist): #partner by the get_object_or_404
-        return render(request, 'profiles/detail.html', {
+        return render(request, 'users/detail.html', {
             'user':user,
             'error_message': "Problem updating record",})
     else:
