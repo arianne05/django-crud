@@ -2,6 +2,8 @@ from django.shortcuts import render, get_object_or_404, reverse
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 #add new import for user to fetch data from User table in a database
 from .models import User
+#import for pagination functionality
+from django.core.paginator import Paginator
 #add new import for try and excepts function to work
 from django.core.exceptions import ObjectDoesNotExist
 
@@ -11,10 +13,18 @@ from django.core.exceptions import ObjectDoesNotExist
 
 #add this code to run the html index.html templates
 def index(request):
-    user_list = User.objects.order_by('pub_date')[:] #use negative sign before the pubdate to descend order/ [:5] limit by 5
-    context = {'user_list': user_list}
+    #previous code without pagination
+    #user_list = User.objects.order_by('pub_date')[:] #use negative sign before the pubdate to descend order/ [:5] limit by 5
+    #context = {'user_list': user_list}
+    #return render(request, 'users/index.html', context) #context variable is added to pass its data
+
+    #updated code with pagination
+    user_list = User.objects.all().order_by('-id') #revised code to put pagination
+    paginator = Paginator(user_list, 5)
+    page_number = request.GET.get('page')
+    user_list = paginator.get_page(page_number)
+    return render(request, 'users/index.html', {'page_obj': user_list})
     
-    return render(request, 'users/index.html', context) #context variable is added to pass its data
 
 #add this code to run the html add.html templates
 def add(request):
