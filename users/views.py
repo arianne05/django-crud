@@ -1,13 +1,11 @@
 from django.shortcuts import render, get_object_or_404, reverse
 from django.http import HttpResponse, HttpResponseRedirect, Http404
-#add new import for user to fetch data from User table in a database
-from .models import User
-#import for pagination functionality
-from django.core.paginator import Paginator
-#add new import for try and excepts function to work
-from django.core.exceptions import ObjectDoesNotExist
+from .models import User #add new import for user to fetch data from User table in a database
+from django.core.paginator import Paginator #import for pagination functionality
+from django.db.models import Q #import for search function
+from django.core.exceptions import ObjectDoesNotExist #add new import for try and excepts function to work
 
-# Create your views here.
+# Create your views here sample
 # def index(request):
 #     return HttpResponse('Hello')
 
@@ -24,7 +22,16 @@ def index(request):
     page_number = request.GET.get('page')
     user_list = paginator.get_page(page_number)
     return render(request, 'users/index.html', {'page_obj': user_list})
-    
+
+#search function
+def search(request):
+    term = request.GET.get('search', '') #get search value parameter and no value as ''
+    user_list = User.objects.filter(Q(user_fname__icontains=term) | Q(user_lname__icontains=term)).order_by('-id') #use __ double underscore after the table name to be used as a wild card(values that close to the search value term)
+    # Pagination in search
+    paginator = Paginator(user_list, 5)
+    page_number = request.GET.get('page')
+    user_list = paginator.get_page(page_number)
+    return render(request, 'users/index.html', {'page_obj': user_list})
 
 #add this code to run the html add.html templates
 def add(request):
