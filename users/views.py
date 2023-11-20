@@ -86,7 +86,7 @@ def processedit(request, profile_id):
         email = request.POST.get('email')
         position = request.POST.get('position')
     except (KeyError, User.DoesNotExist): #partner by the get_object_or_404
-        return render(request, 'profiles/detail.html', {
+        return render(request, 'users/detail.html', {
             'user':user,
             'error_message': "Problem updating record",})
     else:
