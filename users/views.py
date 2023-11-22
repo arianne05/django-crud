@@ -4,6 +4,8 @@ from .models import User #add new import for user to fetch data from User table 
 from django.core.paginator import Paginator #import for pagination functionality
 from django.db.models import Q #import for search function
 from django.core.exceptions import ObjectDoesNotExist #add new import for try and excepts function to work
+from django.contrib.auth import authenticate, logout, login #import for login
+from django.contrib.auth.decorators import login_required, permission_required
 
 # Create your views here sample
 # def index(request):
@@ -62,6 +64,7 @@ def processadd(request):
         user.save() #insert data into the database
         return HttpResponseRedirect('/users') #after inserting into the database redirects into the previous page
 
+@login_required(login_url='/users/login') #we used this if user is click view or detail without loggin in the system they will redirected to login page
 #function for getting the full details of a certain user
 def detail(request, profile_id):
     try:
@@ -75,6 +78,8 @@ def delete(request, profile_id):
     User.objects.filter(id=profile_id).delete() #filter first which profiled id to delete
     return HttpResponseRedirect('/users') #retun to index.html
 
+@login_required(login_url='/users/login') #prevent accesing in url
+@permission_required('users.change_user', login_url='/users/login') #check if staff/sub user has change_user permission if not redirected in login.html
 #function for displaying details in edit inside an input type
 def edit(request, profile_id):
     try:
@@ -106,3 +111,24 @@ def processedit(request, profile_id):
             user_profile.user_image = profile_pic
         user_profile.save()
         return HttpResponseRedirect(reverse('users:detail', args=(profile_id,))) #must put reverse method
+
+#function to view login display
+def loginview(request):
+    return render(request, 'users/login.html')
+
+#function to process login credentials
+def process(request):
+    username = request.POST.get('username')
+    password = request.POST.get('password')
+
+    user = authenticate(username=username, password=password)
+    if user is not None: #if credentials is correct
+        login(request, user)
+        return HttpResponseRedirect('/users')
+    else:
+        return render(request, 'users/login.html', {'error_message' : "Login Failed"})
+    
+#function for process logout 
+def processlogout(request):
+    logout(request)
+    return HttpResponseRedirect('/users/login')

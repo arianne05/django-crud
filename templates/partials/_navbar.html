@@ -3,7 +3,13 @@
 <nav class="navbar navbar-dark bg-dark mb-4">
     <div class="container">
         <a href="/users" class="navbar-brand">Users</a>
-        <a href="add" class="navbar-brand">Add New</a>
-        <a href="" class="navbar-brand">Login</a>
+        <a href="/users/add" class="navbar-brand">Add New</a>
+
+        <!-- Create condition to display who is logged in into the system -->
+        {% if user.is_authenticated %} <!--is_authenticated is a built in library act like a session-->
+            <a href="/users/logout" class="navbar-brand">Logout</a>
+        {% else %}
+            <a href="/users/login" class="navbar-brand">Login</a>
+        {% endif %}
     </div>
 </nav>
