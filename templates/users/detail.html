@@ -23,8 +23,10 @@
         </div>
         
         <div class="btn-group text-center mt-5">
+            {% if user.is_staff %} <!--code to hide these button if not a supervisor/admin-->
             <a href="{% url 'users:delete' users.id %}" class="btn btn-sm btn-danger">Delete</a>
             <a href="{% url 'users:edit' users.id %}" class="btn btn-sm btn-info">Edit</a>
+            {% endif %}
             <a href="{% url 'users:index' %}" class="btn btn-sm btn-success">Back</a>
         </div>
     </div>
