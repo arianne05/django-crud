@@ -78,6 +78,7 @@ def delete(request, profile_id):
     User.objects.filter(id=profile_id).delete() #filter first which profiled id to delete
     return HttpResponseRedirect('/users') #retun to index.html
 
+@login_required(login_url='/users/login') #prevent accesing in url
 #function for displaying details in edit inside an input type
 def edit(request, profile_id):
     try:
