@@ -64,6 +64,7 @@ def processadd(request):
         user.save() #insert data into the database
         return HttpResponseRedirect('/users') #after inserting into the database redirects into the previous page
 
+@login_required(login_url='/users/login') #we used this if user is click view or detail without loggin in the system they will redirected to login page
 #function for getting the full details of a certain user
 def detail(request, profile_id):
     try:
