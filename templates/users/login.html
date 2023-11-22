@@ -1,4 +1,4 @@
-{% extend 'base.html' %}
+{% extends 'base.html' %}
 
 {% block title %}
 Login
@@ -20,7 +20,7 @@ Login
                 <h2>Login Form</h2>
             </div>
 
-            <form action="{% url: 'users:process' %}" method="POST">
+            <form action="{% url 'users:process' %}" method="post">
                 {% csrf_token %}
 
                 <div class="form-group">
