@@ -79,6 +79,7 @@ def delete(request, profile_id):
     return HttpResponseRedirect('/users') #retun to index.html
 
 @login_required(login_url='/users/login') #prevent accesing in url
+@permission_required('users.change_user', login_url='/users/login') #check if staff/sub user has change_user permission if not redirected in login.html
 #function for displaying details in edit inside an input type
 def edit(request, profile_id):
     try:
