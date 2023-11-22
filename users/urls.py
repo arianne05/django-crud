@@ -6,6 +6,9 @@ from django.conf.urls.static import static
 app_name = 'users'
 urlpatterns = [
     path('', views.index, name='index'),
+    path('login', views.login, name='login'),
+    path('login/process', views.process, name='process'),
+    path('logout', views.processlogout, name='processlogout'),
     path('add', views.add, name='add'), #added new path for add.html for the created add class in views.py
     path('search', views.search, name='search'), #added new path for search
     path('processadd', views.processadd, name='processadd'),

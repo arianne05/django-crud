@@ -4,6 +4,8 @@ from .models import User #add new import for user to fetch data from User table 
 from django.core.paginator import Paginator #import for pagination functionality
 from django.db.models import Q #import for search function
 from django.core.exceptions import ObjectDoesNotExist #add new import for try and excepts function to work
+from django.contrib.auth import authenticate, logout, login #import for login
+from django.contrib.auth.decorators import login_required, permission_required
 
 # Create your views here sample
 # def index(request):
@@ -106,3 +108,24 @@ def processedit(request, profile_id):
             user_profile.user_image = profile_pic
         user_profile.save()
         return HttpResponseRedirect(reverse('users:detail', args=(profile_id,))) #must put reverse method
+
+#function to view login display
+def loginview(request):
+    return render(request, 'users/login.html')
+
+#function to process login credentials
+def process(request):
+    username = request.POST.get('username')
+    password = request.POST.get('password')
+
+    user = authenticate(username=username, password=password)
+    if user is not None: #if credentials is correct
+        login(request, user)
+        return HttpResponseRedirect('/users')
+    else:
+        return render(request, 'users/login.html', {'error_message' : "Login Failed"})
+    
+#function for process logout 
+def processlogout(request):
+    logout(request)
+    return HttpResponseRedirect('/users/login')
