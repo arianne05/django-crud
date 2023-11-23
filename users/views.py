@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404, reverse
 from django.http import HttpResponse, HttpResponseRedirect, Http404
-from .models import User #add new import for user to fetch data from User table in a database
+from .models import User, Comment #add new import for user to fetch data from User table in a database
 from django.core.paginator import Paginator #import for pagination functionality
 from django.db.models import Q #import for search function
 from django.core.exceptions import ObjectDoesNotExist #add new import for try and excepts function to work
@@ -69,9 +69,11 @@ def processadd(request):
 def detail(request, profile_id):
     try:
         user = User.objects.get(pk=profile_id)
+        comment = Comment.objects.filter(user_id=profile_id) #recent added to access comment database
+        comments_count = Comment.objects.filter(user_id=profile_id).count() #get avail number of comment under the userid
     except User.DoesNotExist:
         raise Http404("Profile does not exist")
-    return render(request, 'users/detail.html', {'users':user}) #redirects to details.html and passing a 'user' variable/parameter
+    return render(request, 'users/detail.html', {'users':user, 'comment' : comment, 'comments_count':comments_count}) #redirects to details.html and passing a 'user' variable/parameter
 
 #function for delete
 def delete(request, profile_id):
