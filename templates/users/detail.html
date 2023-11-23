@@ -47,6 +47,25 @@
                     <p><strong>{{ comments.name }}</strong> : {{ comments.body }}</p>
                 {% endfor %}
             {% endif %}
+
+            <hr><br>
+
+            <form action="{% url 'users:addcomment' %}" method="post">
+                {% csrf_token %}
+
+                <div class="form-group">
+                    <label>Comment</label>
+                    <textarea name="comment" id="comment" cols="30" rows="5" class="form-control" required></textarea>
+                </div>
+                
+                <!-- fetch the logged user details -->
+                <input type="hidden" name="user_id" id="user_id" value="{{ users.id }}">
+                <input type="hidden" name="name" id="name" value="{{ user.username }}">
+                <input type="hidden" name="email" id="email" value="{{ user.email }}">
+
+                <button type="submit" class="btn btn-success mt-5">Add Comment</button>
+            </form>
+
         </div>
 
     </div>
